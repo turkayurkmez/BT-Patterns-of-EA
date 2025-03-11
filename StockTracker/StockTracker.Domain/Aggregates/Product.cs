@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace StockTracker.Domain.Aggregates
 {
-    public class StockItem : BaseEntity<Guid>, IAggregateRoot
+    public class Product : BaseEntity<Guid>, IAggregateRoot
     {
+        public string Name { get; private set; }
+
 
 
     }
