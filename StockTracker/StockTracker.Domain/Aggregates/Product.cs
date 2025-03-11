@@ -1,5 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using StockTracker.Domain.Common;
+using StockTracker.Domain.Exceptions;
 using StockTracker.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -74,11 +75,21 @@ namespace StockTracker.Domain.Aggregates
 
         public void DecreaseStock(int quantity)
         {
-            Guard.Against.Negative(quantity, nameof(quantity), "Stok miktarı 0'dan küçük olamaz");
+            
+            Guard.Against.Negative(quantity, nameof(quantity),exceptionCreator: ()=>StockException.NegativeQuantity(Name,quantity));
+            //if (quantity <= 0)
+            //{
+            //    throw StockException.NegativeQuantity(Name, quantity);
+            //}
+
+            if (StockQuantity < quantity)
+            {
+                throw StockException.InsuficcientStock(Name, quantity);
+            }
             StockQuantity -= quantity;
         }
 
-        public void Activate()=> IsActive = true;
+        public void Activate() => IsActive = true;
         public void Deactivate() => IsActive = false;
 
 
