@@ -16,7 +16,7 @@ namespace StockTracker.Domain.Common
      *    -- gerekirse güncellenme tarihi olacak"
      *    
      */
-    public abstract class BaseEntity<TID> where TID: struct, IEquatable<TID> 
+    public abstract class BaseEntity<TID> : IEntity where TID: struct, IEquatable<TID>
     {
         public TID Id { get; set; }
 
