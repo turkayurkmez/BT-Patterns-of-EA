@@ -3,11 +3,6 @@ using StockTracker.Domain.Common;
 using StockTracker.Domain.Events;
 using StockTracker.Domain.Exceptions;
 using StockTracker.Domain.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTracker.Domain.Aggregates
 {
@@ -24,7 +19,7 @@ namespace StockTracker.Domain.Aggregates
         public int? CategoryId { get; set; }
         public Category Category { get; set; }
 
-        private Product()
+        public Product()
         {
             // required by EF
         }
@@ -77,8 +72,8 @@ namespace StockTracker.Domain.Aggregates
 
         public void DecreaseStock(int quantity)
         {
-            
-            Guard.Against.Negative(quantity, nameof(quantity),exceptionCreator: ()=>StockException.NegativeQuantity(Name,quantity));
+
+            Guard.Against.Negative(quantity, nameof(quantity), exceptionCreator: () => StockException.NegativeQuantity(Name, quantity));
             //if (quantity <= 0)
             //{
             //    throw StockException.NegativeQuantity(Name, quantity);
@@ -92,12 +87,14 @@ namespace StockTracker.Domain.Aggregates
             AddDomainEvent(new ProductStockDecreasedDomainEvent(Id, quantity));
         }
 
-        public void Activate() {
+        public void Activate()
+        {
             IsActive = true;
             AddDomainEvent(new ProductActivatedDomainEvent(Id));
         }
-        
-        public void Deactivate() {
+
+        public void Deactivate()
+        {
             IsActive = false;
             AddDomainEvent(new ProductDeactivatedDomainEvent(Id));
 

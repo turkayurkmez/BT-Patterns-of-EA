@@ -1,6 +1,10 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-using StockTracker.Infrastructure.Data;
-
+using StockTracker.Application.Extensions;
+using StockTracker.Application.Features.Products.Commands.CreateNewProduct;
+using StockTracker.Application.Features.Products.Queries.GetAllProducts;
+using StockTracker.Application.Features.Products.Queries.GetProduct;
+using StockTracker.Infrastructure.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddApplicationServices();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<StockTrackerDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddInfrastructureServices(connectionString!);
 
 var app = builder.Build();
 
@@ -25,25 +30,33 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/products", async (IMediator mediator) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var query = new GetAllProductsQuery();
+    var result = await mediator.Send(query);
+    return Results.Ok(result);
 
-app.MapGet("/weatherforecast", () =>
+});
+
+app.MapGet("/products/{id}", async (IMediator mediator, string id) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+    var query = new GetProductByIdQuery(Guid.Parse(id));
+    var result = await mediator.Send(query);
+
+    if (result == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(result);
+});
+
+app.MapPost("/products", async (IMediator mediator, CreateNewProductCommand command) =>
+{
+    var result = await mediator.Send(command);
+    return Results.Created($"/products/{result.LastProductId.ToString()}", result);
+});
+
 
 app.Run();
 

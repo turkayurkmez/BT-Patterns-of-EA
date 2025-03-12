@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StockTracker.Application.Services
+﻿namespace StockTracker.Application.Services
 {
     public interface IProductService
     {

@@ -1,9 +1,4 @@
 ﻿using Ardalis.GuardClauses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTracker.Domain.ValueObjects
 {
@@ -14,7 +9,7 @@ namespace StockTracker.Domain.ValueObjects
         public Money(decimal amount, string currency)
         {
             Guard.Against.NegativeOrZero(amount, nameof(amount), message: "Birim, 0'dan küçük olamaz");
-            Guard.Against.NullOrEmpty(currency, nameof(currency),message:"Para birimi boş olamaz");
+            Guard.Against.NullOrEmpty(currency, nameof(currency), message: "Para birimi boş olamaz");
             //if (amount < 0)
             //{
             //    throw new ArgumentException("Birim, 0'dan küçük olamaz!");

@@ -1,6 +1,31 @@
-@StockTracker.API_HostAddress = http://localhost:5101
+@StockTracker.API_HostAddress = https://localhost:7151
 
 GET {{StockTracker.API_HostAddress}}/weatherforecast/
 Accept: application/json
+
+###
+
+GET {{StockTracker.API_HostAddress}}/products
+
+###
+
+POST {{StockTracker.API_HostAddress}}/products
+Content-Type: application/json
+
+{
+  "Name": "Product X",
+  "SKU": "SKU-123",
+  "Description": "Product X Description",
+  "Price":{
+    "Amount": 100, "Currency": "YTL"
+  },
+  "StockQuantity": 100
+
+}
+
+###
+
+@id=a640f1f1-dbe0-4e78-aef4-499bc4cd545e
+GET {{StockTracker.API_HostAddress}}/products/{{id}}
 
 ###

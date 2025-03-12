@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StockTracker.Domain.Aggregates;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTracker.Infrastructure.Data.Configurations
 {
@@ -16,12 +11,13 @@ namespace StockTracker.Infrastructure.Data.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
 
-            builder.Property(x=>x.SKU).IsRequired().HasMaxLength(70);
+            builder.Property(x => x.SKU).IsRequired().HasMaxLength(70);
 
             builder.Property(x => x.Description).HasMaxLength(500);
 
-            builder.OwnsOne(p => p.Price, price => {
-                price.Property(p => p.Amount).HasColumnName("Price").IsRequired();
+            builder.OwnsOne(p => p.Price, price =>
+            {
+                price.Property(p => p.Amount).HasColumnName("Price").HasColumnType("decimal").IsRequired();
                 price.Property(p => p.Currency).HasColumnName("Currency").IsRequired().HasMaxLength(3);
             });
 

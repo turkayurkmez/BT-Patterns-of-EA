@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockTracker.Domain.Common;
 using StockTracker.Domain.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTracker.Infrastructure.Repositories
 {
@@ -28,19 +23,19 @@ namespace StockTracker.Infrastructure.Repositories
 
         public async Task CreateAsync(TEntity entity)
         {
-          await _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity);
 
         }
 
         public Task DeleteAsync(TEntity entity)
         {
-           _dbSet.Remove(entity);
+            _dbSet.Remove(entity);
             return Task.CompletedTask;
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-           return await _dbSet.ToListAsync();
+            return await _dbSet.ToListAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(TId id)
@@ -55,7 +50,7 @@ namespace StockTracker.Infrastructure.Repositories
             _context.Entry(entity).State = EntityState.Modified;
 
             return Task.CompletedTask;
-          
+
 
         }
     }

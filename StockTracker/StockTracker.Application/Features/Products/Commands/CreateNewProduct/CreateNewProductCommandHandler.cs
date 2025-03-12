@@ -2,15 +2,10 @@
 using MediatR;
 using StockTracker.Domain.Aggregates;
 using StockTracker.Domain.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTracker.Application.Features.Products.Commands.CreateNewProduct
 {
-    public class CreateNewProductCommandHandler(IProductRepository repository) : IRequestHandler<CreateNewProductCommand, CreateNewProductCommandResponse>
+    public class CreateNewProductCommandHandler(IProductRepository repository, IUnitOfWork unitOfWork) : IRequestHandler<CreateNewProductCommand, CreateNewProductCommandResponse>
     {
         public async Task<CreateNewProductCommandResponse> Handle(CreateNewProductCommand request, CancellationToken cancellationToken)
         {
@@ -22,11 +17,23 @@ namespace StockTracker.Application.Features.Products.Commands.CreateNewProduct
             var product = request.Adapt<Product>();
             //Zaten BaseEntity'den gelen Id'yi Guid.NewGuid() ile set etmeye gerek yok.
             //product.Id = Guid.NewGuid();
-           
 
-            await repository.CreateAsync(product);
+            await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-            return new CreateNewProductCommandResponse(product.Id);
+
+            try
+            {
+                await repository.CreateAsync(product);
+                await unitOfWork.SaveChangesAsync(cancellationToken);
+                await unitOfWork.CommitTransactionAsync(cancellationToken);
+
+                return new CreateNewProductCommandResponse(product.Id);
+            }
+            catch (Exception)
+            {
+                await unitOfWork.RollbackTransactionAsync(cancellationToken);
+                throw;
+            }
 
 
 

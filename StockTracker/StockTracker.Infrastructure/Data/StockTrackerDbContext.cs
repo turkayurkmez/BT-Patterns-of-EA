@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using StockTracker.Domain.Aggregates;
 using StockTracker.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StockTracker.Infrastructure.Data
 {
@@ -17,7 +12,7 @@ namespace StockTracker.Infrastructure.Data
 
         private readonly IMediator _mediator;
 
-        public StockTrackerDbContext(DbContextOptions<StockTrackerDbContext> options, IMediator mediator):base(options)
+        public StockTrackerDbContext(DbContextOptions<StockTrackerDbContext> options, IMediator mediator) : base(options)
         {
             _mediator = mediator;
         }
@@ -35,7 +30,7 @@ namespace StockTracker.Infrastructure.Data
 
             //1. olay bulunan dbSet'leri bul:
             var domainEntities = ChangeTracker.Entries<IAggregateRoot>()
-                                              .Where(x => x.Entity.DomainEvents != null 
+                                              .Where(x => x.Entity.DomainEvents != null
                                                        && x.Entity.DomainEvents.Any()
                                                );
 
@@ -56,7 +51,7 @@ namespace StockTracker.Infrastructure.Data
 
             //4. olayları temizle:
 
-           
+
 
 
 
@@ -65,7 +60,7 @@ namespace StockTracker.Infrastructure.Data
             foreach (var item in ChangeTracker.Entries<IEntity>())
             {
                 switch (item.State)
-                {                  
+                {
                     case EntityState.Modified:
                         item.Entity.UpdatedAt = DateTime.Now;
                         break;

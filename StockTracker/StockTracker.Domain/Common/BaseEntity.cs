@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StockTracker.Domain.Common
+﻿namespace StockTracker.Domain.Common
 {
     /*
      * Her entity'nin 
@@ -16,15 +10,15 @@ namespace StockTracker.Domain.Common
      *    -- gerekirse güncellenme tarihi olacak"
      *    
      */
-    public abstract class BaseEntity<TID> : IEntity where TID: struct, IEquatable<TID>
+    public abstract class BaseEntity<TID> : IEntity where TID : struct, IEquatable<TID>
     {
         public TID Id { get; set; }
-        public DateTime CreatedAt { get ; set ; }
-        public DateTime? UpdatedAt { get ; set ; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public BaseEntity()
         {
-            Id =  Id is Guid ? (TID)(object)Guid.NewGuid() : default;
+            Id = Id is Guid ? (TID)(object)Guid.NewGuid() : default;
             CreatedAt = DateTime.Now;
 
         }
