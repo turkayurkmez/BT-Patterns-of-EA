@@ -12,7 +12,9 @@ namespace StockTracker.Domain.Aggregates
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
-        
+
+        private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
         private Category()
         {
@@ -33,6 +35,11 @@ namespace StockTracker.Domain.Aggregates
             Guard.Against.NullOrEmpty(description, nameof(description), "Kategori açıklaması boş olamaz");
             Name = name;
             Description = description;
+        }
+
+        public void ClearDomainEvents()
+        {
+            throw new NotImplementedException();
         }
     }
 }
