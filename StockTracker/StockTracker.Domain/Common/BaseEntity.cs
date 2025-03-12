@@ -19,9 +19,8 @@ namespace StockTracker.Domain.Common
     public abstract class BaseEntity<TID> : IEntity where TID: struct, IEquatable<TID>
     {
         public TID Id { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get ; set ; }
+        public DateTime? UpdatedAt { get ; set ; }
 
         public BaseEntity()
         {

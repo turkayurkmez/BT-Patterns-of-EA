@@ -1,8 +1,9 @@
-﻿using StockTracker.Domain.Common;
+﻿using MediatR;
+using StockTracker.Domain.Common;
 
 namespace StockTracker.Domain.Events
 {
-    public class ProductStockIncreasedDomainEvent : DomainEvent
+    public class ProductStockIncreasedDomainEvent : DomainEvent, INotification
     {
         public Guid ProductId { get; private set; }
         public int Quantity { get; private set; }
