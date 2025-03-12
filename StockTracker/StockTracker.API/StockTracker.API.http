@@ -29,3 +29,11 @@ Content-Type: application/json
 GET {{StockTracker.API_HostAddress}}/products/{{id}}
 
 ###
+
+PUT {{StockTracker.API_HostAddress}}/products/{{id}}
+{
+  "productId":{{id}},
+  "quantity": 20
+}
+
+###

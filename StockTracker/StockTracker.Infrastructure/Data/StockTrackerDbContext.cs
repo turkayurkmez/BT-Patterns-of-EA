@@ -51,6 +51,8 @@ namespace StockTracker.Infrastructure.Data
 
             //4. olayları temizle:
 
+           
+
 
 
 

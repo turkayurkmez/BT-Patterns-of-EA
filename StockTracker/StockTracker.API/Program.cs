@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using StockTracker.Application.Extensions;
 using StockTracker.Application.Features.Products.Commands.CreateNewProduct;
+using StockTracker.Application.Features.Products.Commands.StockIncrease;
 using StockTracker.Application.Features.Products.Queries.GetAllProducts;
 using StockTracker.Application.Features.Products.Queries.GetProduct;
 using StockTracker.Infrastructure.Extensions;
@@ -57,10 +58,14 @@ app.MapPost("/products", async (IMediator mediator, CreateNewProductCommand comm
     return Results.Created($"/products/{result.LastProductId.ToString()}", result);
 });
 
+app.MapPut("/products/{id}", async (IMediator mediator, string id, StockIncreaseCommand command) =>
+{  
+
+
+    var result = await mediator.Send(command);
+    return Results.Ok(result);
+});
+
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
