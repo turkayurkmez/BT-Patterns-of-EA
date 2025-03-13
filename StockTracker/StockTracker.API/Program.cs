@@ -1,5 +1,10 @@
+﻿using Eshop.EventBus;
+using MassTransit;
+
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
+using StockTracker.API.Consumers;
 using StockTracker.Application.Extensions;
 using StockTracker.Application.Features.Products.Commands.CreateNewProduct;
 using StockTracker.Application.Features.Products.Commands.StockIncrease;
@@ -19,6 +24,50 @@ builder.Services.AddApplicationServices();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddInfrastructureServices(connectionString!);
+
+builder.Services.AddMassTransit(regConfig =>
+{
+    regConfig.AddConsumer<OrderCreatedEventConsumer>(cc =>
+    {
+        cc.UseMessageRetry(retry =>
+        {
+            retry.Intervals(TimeSpan.FromSeconds(5),
+                            TimeSpan.FromSeconds(10), 
+                            TimeSpan.FromSeconds(20));
+
+            //retry.Exponential(5, TimeSpan.FromSeconds(5),TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(1));
+            retry.Handle<TimeoutException>();
+
+
+        });
+
+        //1 dakika içinde 10 tane hata olursa, bu hatalar 10 aktif istek içindeyse o zaman işlemi durdur
+
+        cc.UseCircuitBreaker(cb =>
+        {
+            cb.TrackingPeriod = TimeSpan.FromMinutes(1); //1 dakika içinde
+            cb.TripThreshold = 10; //10 hata olursa
+            cb.ActiveThreshold = 10; //10 aktif istek içinde
+            cb.ResetInterval = TimeSpan.FromMinutes(5); //devre kesici, 5 dakika sonra resetlenir
+        });
+
+    });
+    regConfig.UsingRabbitMq((context, config) => {
+
+        config.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        config.ConfigureEndpoints(context);
+        //fan out: bir mesajı alan tüm consumerlara gönderir
+        config.Publish<StockAvailableEvent>(x=>x.ExchangeType = ExchangeType.Fanout);
+        config.Publish<StockNotAvailableEvent>(x => x.ExchangeType = ExchangeType.Fanout);
+
+
+    });
+});
 
 var app = builder.Build();
 
@@ -65,6 +114,8 @@ app.MapPut("/products/{id}", async (IMediator mediator, string id, StockIncrease
     var result = await mediator.Send(command);
     return Results.Ok(result);
 });
+
+
 
 
 app.Run();

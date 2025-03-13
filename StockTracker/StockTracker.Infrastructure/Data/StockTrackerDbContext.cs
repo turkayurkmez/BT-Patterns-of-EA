@@ -49,15 +49,7 @@ namespace StockTracker.Infrastructure.Data
                 await _mediator.Publish(@event);
             }
 
-            //4. olayları temizle:
-
-           
-
-
-
-
-
-
+            //4. olayları temizle:       
 
             foreach (var item in ChangeTracker.Entries<IEntity>())
             {

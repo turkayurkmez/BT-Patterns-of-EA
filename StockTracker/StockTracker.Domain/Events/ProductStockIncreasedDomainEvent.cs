@@ -3,7 +3,7 @@ using StockTracker.Domain.Common;
 
 namespace StockTracker.Domain.Events
 {
-    public class ProductStockIncreasedDomainEvent : DomainEvent, INotification
+    public class ProductStockIncreasedDomainEvent : DomainEvent
     {
         public Guid ProductId { get; private set; }
         public int Quantity { get; private set; }
