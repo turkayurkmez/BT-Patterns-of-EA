@@ -29,7 +29,7 @@ namespace StockTracker.Domain.Aggregates
 
             Guard.Against.NullOrEmpty(name, nameof(name), "Ürün adı boş olamaz");
             Guard.Against.NullOrEmpty(sku, nameof(sku), "Ürün sku boş olamaz");
-            Guard.Against.NegativeOrZero(Price.Amount, nameof(Price), "Ürün fiyatı 0'dan küçük olamaz");
+            Guard.Against.NegativeOrZero(price.Amount, nameof(price), "Ürün fiyatı 0'dan küçük olamaz");
 
 
             Name = name;

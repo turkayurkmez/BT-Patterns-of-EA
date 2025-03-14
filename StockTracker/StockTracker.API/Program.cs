@@ -120,3 +120,5 @@ app.MapPut("/products/{id}", async (IMediator mediator, string id, StockIncrease
 
 app.Run();
 
+//API EndPoint testleri için erişilebilir bir Program.cs dosyası oluşturuldu.
+public partial class Program { }

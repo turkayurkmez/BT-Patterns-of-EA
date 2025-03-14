@@ -4,7 +4,7 @@ using StockTracker.Domain.Contracts;
 
 namespace StockTracker.Application.Features.Products.Queries.GetAllProducts
 {
-    internal class GetAllProductsQueryHandler(IProductRepository productRepository) : IRequestHandler<GetAllProductsQuery, GetAllProductsQueryResponse>
+    public class GetAllProductsQueryHandler(IProductRepository productRepository) : IRequestHandler<GetAllProductsQuery, GetAllProductsQueryResponse>
     {
         public async Task<GetAllProductsQueryResponse> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
